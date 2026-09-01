@@ -38,10 +38,22 @@ An all-in-one multi-tenant SaaS platform for salons, spas, barbers, beauty profe
 
 ## Quick Start
 
-### Prerequisites
+### Prerequisites (Software Installation)
 
-- Docker 24+ and Docker Compose
-- Git
+Before running this project, you must install the following core tools on your local machine:
+
+1. **Git:** For version control.
+   * 🔗 Download: [git-scm.com](https://git-scm.com/downloads)
+2. **Docker Desktop:** Required to run PostgreSQL and Redis locally without complicated setup.
+   * 🔗 Download: [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop/)
+3. **Node.js (v20+):** Required for the frontend Next.js applications and Turborepo.
+   * 🔗 Download: [nodejs.org](https://nodejs.org/en/download/) (Select the LTS version)
+4. **Python (v3.11+):** Required for the FastAPI backend.
+   * 🔗 Download: [python.org/downloads](https://www.python.org/downloads/) (Make sure to check "Add Python to PATH" during installation)
+5. **pnpm (v8+):** The package manager used in this monorepo. 
+   * 🔗 Install via terminal (after installing Node.js): `npm install -g pnpm`
+6. **VS Code (Recommended IDE):**
+   * 🔗 Download: [code.visualstudio.com](https://code.visualstudio.com/)
 
 ### 1 — Clone
 
