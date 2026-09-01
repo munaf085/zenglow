@@ -8,7 +8,10 @@ COPY package.json pnpm-workspace.yaml ./
 COPY pnpm-lock.yaml* ./
 COPY packages/types/package.json ./packages/types/
 COPY packages/config/package.json ./packages/config/
+COPY packages/ui/package.json ./packages/ui/
+COPY apps/business-web/package.json ./apps/business-web/
 COPY apps/customer-web/package.json ./apps/customer-web/
+COPY apps/admin-web/package.json ./apps/admin-web/
 
 RUN pnpm install --no-frozen-lockfile
 
@@ -47,3 +50,4 @@ ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 
 CMD ["node", "server.js"]
+
