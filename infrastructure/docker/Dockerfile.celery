@@ -1,0 +1,25 @@
+FROM python:3.11-slim AS base
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpq-dev gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY backend/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY backend/ .
+
+RUN addgroup --system --gid 1001 zenglow && \
+    adduser --system --uid 1001 --gid 1001 zenglow && \
+    chown -R zenglow:zenglow /app
+
+USER zenglow
+
+# Default: run worker. Override CMD for beat scheduler.
+CMD ["celery", "-A", "app.workers.celery_app", "worker", "--loglevel=info", "--concurrency=4"]

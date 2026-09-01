@@ -1,0 +1,239 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# Zenglow — Local Development Stack
+# Usage:
+#   cp .env.example .env
+#   docker compose up -d
+#   docker compose exec backend alembic upgrade head
+#   docker compose exec backend python scripts/seed.py
+# ──────────────────────────────────────────────────────────────────────────────
+
+networks:
+  zenglow_net:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:
+
+services:
+
+  # ── PostgreSQL ───────────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: zenglow_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: zenglow_db
+      POSTGRES_USER: zenglow
+      POSTGRES_PASSWORD: zenglow_dev
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./infrastructure/docker/init-db.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "5432:5432"
+    networks:
+      - zenglow_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U zenglow -d zenglow_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ── Redis ────────────────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: zenglow_redis
+    restart: unless-stopped
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - zenglow_net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── MinIO (S3-compatible on-prem object storage) ──────────────────────────
+  minio:
+    image: minio/minio:latest
+    container_name: zenglow_minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - minio_data:/data
+    ports:
+      - "9000:9000"   # S3 API
+      - "9001:9001"   # MinIO Console UI
+    networks:
+      - zenglow_net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ── Backend API ──────────────────────────────────────────────────────────────
+  backend:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/Dockerfile.backend
+    container_name: zenglow_backend
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://zenglow:zenglow_dev@postgres:5432/zenglow_db
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/2
+      ENVIRONMENT: development
+      ALLOWED_ORIGINS_STR: "http://localhost:3000,http://localhost:3001,http://localhost:3002"
+      PAYMENT_PROVIDER: mock
+      EMAIL_PROVIDER: console
+      SMS_PROVIDER: console
+      STORAGE_PROVIDER: local
+    ports:
+      - "8000:8000"
+    networks:
+      - zenglow_net
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app:cached
+      - ./uploads:/app/uploads
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  # ── Celery Worker ─────────────────────────────────────────────────────────────
+  celery-worker:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/Dockerfile.celery
+    container_name: zenglow_celery_worker
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://zenglow:zenglow_dev@postgres:5432/zenglow_db
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/2
+      PAYMENT_PROVIDER: mock
+      EMAIL_PROVIDER: console
+      SMS_PROVIDER: console
+      STORAGE_PROVIDER: local
+    networks:
+      - zenglow_net
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app:cached
+    command: celery -A app.workers.celery_app worker --loglevel=info --concurrency=4
+
+  # ── Celery Beat (scheduler) ───────────────────────────────────────────────────
+  celery-beat:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/Dockerfile.celery
+    container_name: zenglow_celery_beat
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://zenglow:zenglow_dev@postgres:5432/zenglow_db
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/2
+      PAYMENT_PROVIDER: mock
+      EMAIL_PROVIDER: console
+      SMS_PROVIDER: console
+      STORAGE_PROVIDER: local
+    networks:
+      - zenglow_net
+    depends_on:
+      - celery-worker
+    volumes:
+      - ./backend:/app:cached
+    command: celery -A app.workers.celery_app beat --loglevel=info
+
+  # ── Customer Web ──────────────────────────────────────────────────────────────
+  customer-web:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/Dockerfile.customer-web
+    container_name: zenglow_customer_web
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000/api/v1
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+      NEXT_PUBLIC_BUSINESS_APP_URL: http://localhost:3001
+      NEXT_PUBLIC_ADMIN_APP_URL: http://localhost:3002
+    ports:
+      - "3000:3000"
+    networks:
+      - zenglow_net
+    depends_on:
+      - backend
+
+  # ── Business Web ──────────────────────────────────────────────────────────────
+  business-web:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/Dockerfile.business-web
+    container_name: zenglow_business_web
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000/api/v1
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+    ports:
+      - "3001:3001"
+    networks:
+      - zenglow_net
+    depends_on:
+      - backend
+
+  # ── Admin Web ─────────────────────────────────────────────────────────────────
+  admin-web:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/Dockerfile.admin-web
+    container_name: zenglow_admin_web
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000/api/v1
+    ports:
+      - "3002:3002"
+    networks:
+      - zenglow_net
+    depends_on:
+      - backend
+
+  # ── Flower (Celery monitoring) — optional ─────────────────────────────────────
+  flower:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/Dockerfile.celery
+    container_name: zenglow_flower
+    restart: unless-stopped
+    environment:
+      CELERY_BROKER_URL: redis://redis:6379/1
+    ports:
+      - "5555:5555"
+    networks:
+      - zenglow_net
+    depends_on:
+      - redis
+    command: celery -A app.workers.celery_app flower --port=5555
+    profiles:
+      - monitoring
