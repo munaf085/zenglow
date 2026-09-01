@@ -28,6 +28,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV NEXT_OUTPUT_STANDALONE=1
 ENV NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
 
+ENV BACKEND_API_URL=http://backend:8000/api/v1
 RUN pnpm --filter business-web build
 
 # ── Stage 3: Production ───────────────────────────────────────────────────────
@@ -51,6 +52,7 @@ ENV PORT=3001
 ENV HOSTNAME=0.0.0.0
 
 CMD ["node", "apps/business-web/server.js"]
+
 
 
 
