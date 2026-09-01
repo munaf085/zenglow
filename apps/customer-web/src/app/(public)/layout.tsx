@@ -1,4 +1,5 @@
 import { Header } from "@/components/layout/Header";
+import Link from "next/link";
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -19,7 +20,20 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
                 Discover and book at the best salons, spas, and wellness centres near you.
               </p>
             </div>
-            <div className="grid grid-cols-2 gap-8 sm:grid-cols-3">
+            <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
+              <div>
+                <h3 className="text-sm font-semibold text-gray-900 mb-3">
+                  Quick Links
+                </h3>
+
+                <ul className="space-y-2 text-sm text-gray-500">
+                  <li>
+                    <Link href="/about" className="hover:text-gray-700">
+                      About Us
+                    </Link>
+                  </li>
+                </ul>
+              </div>
               <div>
                 <h3 className="text-sm font-semibold text-gray-900 mb-3">Discover</h3>
                 <ul className="space-y-2 text-sm text-gray-500">
