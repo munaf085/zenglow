@@ -40,10 +40,10 @@ ENV NODE_ENV=production \
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
 
-RUN mkdir -p ./public ./.next/static
+RUN mkdir -p ./apps/customer-web/.next/static
 
 COPY --from=builder --chown=nextjs:nodejs /app/apps/customer-web/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/apps/customer-web/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/apps/customer-web/.next/static ./apps/customer-web/.next/static
 
 USER nextjs
 EXPOSE 3000
@@ -51,6 +51,7 @@ ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 
 CMD ["node", "apps/customer-web/server.js"]
+
 
 
 
