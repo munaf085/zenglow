@@ -176,7 +176,7 @@ services:
     restart: unless-stopped
     environment:
       NEXT_PUBLIC_API_URL: http://localhost:8000/api/v1
-        BACKEND_API_URL: http://backend:8000/api/v1
+      BACKEND_API_URL: http://backend:8000/api/v1
       NEXT_PUBLIC_APP_URL: http://localhost:3000
       NEXT_PUBLIC_BUSINESS_APP_URL: http://localhost:3001
       NEXT_PUBLIC_ADMIN_APP_URL: http://localhost:3002
@@ -196,7 +196,7 @@ services:
     restart: unless-stopped
     environment:
       NEXT_PUBLIC_API_URL: http://localhost:8000/api/v1
-        BACKEND_API_URL: http://backend:8000/api/v1
+      BACKEND_API_URL: http://backend:8000/api/v1
       NEXT_PUBLIC_APP_URL: http://localhost:3000
     ports:
       - "3001:3001"
@@ -214,7 +214,7 @@ services:
     restart: unless-stopped
     environment:
       NEXT_PUBLIC_API_URL: http://localhost:8000/api/v1
-        BACKEND_API_URL: http://backend:8000/api/v1
+      BACKEND_API_URL: http://backend:8000/api/v1
     ports:
       - "3002:3002"
     networks:
@@ -240,4 +240,5 @@ services:
     command: celery -A app.workers.celery_app flower --port=5555
     profiles:
       - monitoring
+
 
