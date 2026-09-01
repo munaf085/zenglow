@@ -25,6 +25,7 @@ COPY --from=deps /app /app
 COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV NEXT_OUTPUT_STANDALONE=1
 ENV NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
 
 RUN pnpm --filter business-web build
@@ -50,5 +51,6 @@ ENV PORT=3001
 ENV HOSTNAME=0.0.0.0
 
 CMD ["node", "server.js"]
+
 
 
