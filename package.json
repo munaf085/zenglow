@@ -1,0 +1,33 @@
+{
+  "name": "zenglow",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Zenglow - All-in-one SaaS platform for salons, spas, and wellness businesses",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:customer": "turbo run dev --filter=customer-web",
+    "dev:business": "turbo run dev --filter=business-web",
+    "dev:admin": "turbo run dev --filter=admin-web",
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "type-check": "turbo run type-check",
+    "test": "turbo run test",
+    "test:e2e": "turbo run test:e2e",
+    "clean": "turbo run clean && rimraf node_modules"
+  },
+  "devDependencies": {
+    "turbo": "^1.13.3",
+    "rimraf": "^5.0.5",
+    "prettier": "^3.2.5",
+    "eslint": "^8.57.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "packageManager": "pnpm@8.15.4"
+}
