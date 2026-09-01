@@ -1,0 +1,32 @@
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+select = ["E", "W", "F", "I", "N", "UP", "B", "C4", "SIM"]
+ignore = ["E501", "B008", "N805"]
+exclude = ["alembic/versions/"]
+
+[tool.ruff.isort]
+known-first-party = ["app"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = false
+ignore_missing_imports = true
+plugins = ["pydantic.mypy"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+env = [
+    "ENVIRONMENT=test",
+    "DATABASE_URL=postgresql://zenglow:zenglow_dev@localhost:5432/zenglow_test",
+    "JWT_SECRET_KEY=test-secret-key-do-not-use-in-production",
+    "REDIS_URL=redis://localhost:6379/15",
+]
+
+[tool.coverage.run]
+source = ["app"]
+omit = ["tests/*", "alembic/*"]
+
+[tool.coverage.report]
+fail_under = 70
