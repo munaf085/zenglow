@@ -58,14 +58,14 @@ Before running this project, you must install the following core tools on your l
 ### 1 — Clone
 
 ```bash
-git clone https://github.com/your-org/zenglow.git
+git clone https://github.com/munaf085/zenglow.git
 cd zenglow
 ```
 
 ### 2 — Configure environment
 
 ```bash
-cp .env.example .env
+cp .env.example .env # (Windows users: use 'copy .env.example .env')
 # Default values work for local Docker development.
 # No edits required to run locally.
 ```
@@ -350,3 +350,32 @@ See `.env.example` for the complete list with descriptions.
 ## License
 
 Proprietary. All rights reserved.
+
+
+## How to Develop Features
+
+When you're ready to add new code or make changes, follow this standard workflow:
+
+### 1. Branching
+Always create a new branch for your feature or bug fix:
+```bash
+git checkout -b feature/your-feature-name
+```
+
+### 2. Making Changes
+- **Frontend (UI):** If you're building a new component that can be shared, add it to `packages/ui`. If it's specific to an app, add it to the app's `components/` folder. Run `pnpm dev` in the root to test changes live.
+- **Backend (API):** Add new routes to `backend/app/api/v1/` and new models to `backend/app/models/`. After making database model changes, run `alembic revision --autogenerate -m "description"` and `alembic upgrade head`. 
+
+### 3. Testing
+Before pushing your code, run the local test suites to ensure everything works:
+- **Frontend Tests:** `pnpm test`
+- **Backend Tests:** `cd backend && pytest`
+
+### 4. Committing and Pushing
+Write clear commit messages, then push your branch and open a Pull Request (PR) on GitHub:
+```bash
+git add .
+git commit -m "feat: added new user profile feature"
+git push origin feature/your-feature-name
+```
+
