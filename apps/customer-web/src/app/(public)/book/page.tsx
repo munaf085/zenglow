@@ -152,7 +152,7 @@ export default function BookPage() {
   return (
     <div className="max-w-3xl mx-auto px-4 py-6 sm:py-10 pb-28 sm:pb-12">
       {/* Progress Steps Header */}
-      <div className="flex items-center gap-2 mb-6 sm:mb-8 overflow-x-auto pb-2 scrollbar-none">
+      <div className="flex items-center gap-2 mb-6 sm:mb-8 overflow-x-auto pb-2">
         {(["service", "staff", "datetime", "confirm"] as Step[]).map((s, i) => (
           <div key={s} className="flex items-center gap-2 flex-shrink-0">
             {i > 0 && <div className="w-6 sm:w-10 h-0.5 bg-gray-200" />}
@@ -319,7 +319,7 @@ export default function BookPage() {
             <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2.5">
               Available Dates
             </label>
-            <div className="flex gap-2.5 overflow-x-auto pb-3 scrollbar-none">
+            <div className="flex gap-2.5 overflow-x-auto pb-3">
               {Array.from({ length: 14 }).map((_, i) => {
                 const d = addDays(new Date(), i);
                 const isSelected =
