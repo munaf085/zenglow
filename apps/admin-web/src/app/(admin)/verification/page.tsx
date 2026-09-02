@@ -243,11 +243,11 @@ export default function VerificationQueuePage() {
 
       {/* Confirmation modal */}
       {selected && action && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md">
+        <div className="fixed inset-0 bg-black/50 flex items-start sm:items-center justify-center z-50 p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto my-8 sm:my-0">
             {/* Header */}
             <div className={cn(
-              "px-6 py-5 rounded-t-2xl border-b",
+              "px-6 py-5 rounded-t-2xl border-b sticky top-0 bg-white z-10",
               action === "approve" ? "bg-green-50 border-green-100" :
               action === "reject"  ? "bg-red-50 border-red-100" :
               "bg-blue-50 border-blue-100"

@@ -296,8 +296,8 @@ export default function InventoryPage() {
 
       {/* Add Product Modal */}
       {isAddProductOpen && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-xl">
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-start sm:items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-xl my-8 sm:my-0">
             <div className="flex items-center justify-between border-b border-gray-100 pb-3">
               <h3 className="font-bold text-gray-900 text-lg">Add New Product</h3>
               <button onClick={() => setIsAddProductOpen(false)} className="text-gray-400 hover:text-gray-600">
@@ -438,8 +438,8 @@ export default function InventoryPage() {
 
       {/* Adjust Stock Modal */}
       {isStockAdjustOpen && selectedProduct && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-xl">
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-start sm:items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-xl my-8 sm:my-0">
             <div className="flex items-center justify-between border-b border-gray-100 pb-3">
               <div>
                 <h3 className="font-bold text-gray-900 text-lg">Adjust Stock</h3>

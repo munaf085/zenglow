@@ -214,8 +214,8 @@ export default function BookingDetailPage() {
 
       {/* Cancel dialog */}
       {showCancelDialog && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm">
+        <div className="fixed inset-0 bg-black/50 flex items-start sm:items-center justify-center z-50 p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm my-8 sm:my-0">
             <div className="px-6 py-5 border-b border-gray-200">
               <h2 className="text-base font-bold text-gray-900">Cancel appointment?</h2>
               <p className="text-sm text-gray-500 mt-1">This cannot be undone.</p>
