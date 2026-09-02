@@ -1,3 +1,15 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+export const metadata: Metadata = {
+  title: "About Us | Zenglow",
+  description:
+    "Learn more about Zenglow, our mission, vision, and commitment to helping you discover and book the best salons, spas, and wellness centres.",
+  openGraph: {
+    title: "About Us | Zenglow",
+    description:
+      "Learn more about Zenglow and our mission to make wellness discovery and booking simple.",
+  },
+};
 export default function AboutPage() {
   return (
     <div className="bg-white text-gray-900">
@@ -266,12 +278,12 @@ export default function AboutPage() {
             your next appointment.
           </p>
 
-          <a
+          <Link
             href="/explore"
             className="mt-8 inline-flex rounded-lg bg-white px-7 py-3 font-semibold text-brand-600 transition-colors hover:bg-gray-100"
           >
             Explore Businesses
-          </a>
+          </Link>
         </div>
       </section>
     </div>
