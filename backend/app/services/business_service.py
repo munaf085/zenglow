@@ -128,7 +128,7 @@ class BusinessService:
         business = await self.repo.get_or_raise(business_id)
         assert_business_access(user, business_id)
 
-        update_data = data.model_dump(exclude_unset=True)
+        update_data = data.model_dump(exclude_unset=True, mode="json")
         for key, value in update_data.items():
             setattr(business, key, value)
 

@@ -5,7 +5,7 @@ from datetime import datetime
 from typing import List, Optional
 from uuid import UUID
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, HttpUrl
 
 from app.models.business import BusinessCategory, BusinessStatus
 
@@ -79,9 +79,9 @@ class BusinessUpdate(BaseModel):
     phone: Optional[str] = None
     website: Optional[str] = None
 
-    instagram_url: Optional[str] = None
-    facebook_url: Optional[str] = None
-    tiktok_url: Optional[str] = None
+    instagram_url: Optional[HttpUrl] = None
+    facebook_url: Optional[HttpUrl] = None
+    tiktok_url: Optional[HttpUrl] = None
 
     booking_advance_days: Optional[int] = Field(default=None, ge=1, le=365)
     cancellation_hours: Optional[int] = Field(default=None, ge=0)
@@ -100,9 +100,9 @@ class BusinessResponse(BusinessBase):
     is_verified: bool
     is_featured: bool
 
-    instagram_url: Optional[str] = None
-    facebook_url: Optional[str] = None
-    tiktok_url: Optional[str] = None
+    instagram_url: Optional[HttpUrl] = None
+    facebook_url: Optional[HttpUrl] = None
+    tiktok_url: Optional[HttpUrl] = None
 
     logo_url: Optional[str] = None
     cover_image_url: Optional[str] = None
