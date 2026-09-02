@@ -1,0 +1,45 @@
+name: AI Code Review
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, ready_for_review]
+
+permissions:
+  pull-requests: write
+  issues: write
+  contents: read
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    steps:
+      - name: Checkout PR Code
+        uses: actions/checkout@v4
+        with:
+          path: pr-code
+
+      - name: Checkout AI Agent
+        uses: actions/checkout@v4
+        with:
+          repository: munaf085/CodeReviewAgent
+          path: ai-agent
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Prepare Agent
+        run: |
+          cd ai-agent
+          npm ci
+          npm run build
+
+      - name: Run Review
+        run: |
+          cd pr-code
+          node ../ai-agent/dist/index.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
