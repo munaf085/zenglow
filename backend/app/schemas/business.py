@@ -60,6 +60,9 @@ class BusinessBase(BaseModel):
     email: Optional[EmailStr] = None
     phone: Optional[str] = Field(default=None, max_length=30)
     website: Optional[str] = None
+    instagram_url: Optional[HttpUrl] = None
+    facebook_url: Optional[HttpUrl] = None
+    tiktok_url: Optional[HttpUrl] = None
     booking_advance_days: int = Field(default=60, ge=1, le=365)
     cancellation_hours: int = Field(default=24, ge=0)
     cancellation_policy: Optional[str] = None
