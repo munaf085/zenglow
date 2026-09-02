@@ -301,8 +301,8 @@ export default function PackagesPage() {
 
       {/* Create Package Modal */}
       {isAddTemplateOpen && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-xl">
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-start sm:items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-xl my-8 sm:my-0">
             <div className="flex items-center justify-between border-b border-gray-100 pb-3">
               <h3 className="font-bold text-gray-900 text-lg">Create Package Combo</h3>
               <button onClick={() => setIsAddTemplateOpen(false)} className="text-gray-400 hover:text-gray-600">
@@ -425,8 +425,8 @@ export default function PackagesPage() {
 
       {/* Sell Package Modal */}
       {isSellOpen && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-xl">
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-start sm:items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-xl my-8 sm:my-0">
             <div className="flex items-center justify-between border-b border-gray-100 pb-3">
               <h3 className="font-bold text-gray-900 text-lg">Sell Package to Customer</h3>
               <button onClick={() => setIsSellOpen(false)} className="text-gray-400 hover:text-gray-600">

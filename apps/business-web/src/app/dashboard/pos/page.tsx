@@ -400,8 +400,8 @@ export default function POSPage() {
 
       {/* Tender Modal */}
       {isCheckoutOpen && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-xl">
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-start sm:items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-xl my-8 sm:my-0">
             <div className="flex items-center justify-between border-b border-gray-100 pb-3">
               <h3 className="font-bold text-gray-900 text-lg">Select Payment Tender</h3>
               <button onClick={() => setIsCheckoutOpen(false)} className="text-gray-400 hover:text-gray-600">
@@ -463,7 +463,7 @@ export default function POSPage() {
 
       {/* Completed Order Receipt Modal */}
       {completedOrder && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-start sm:items-center justify-center p-4 overflow-y-auto">
           <div className="bg-white rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-xl text-center">
             <CheckCircle2 className="w-12 h-12 text-green-600 mx-auto" />
             <h3 className="font-bold text-gray-900 text-lg">Sale Successful!</h3>

@@ -127,8 +127,8 @@ export default function StaffPage() {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md">
+        <div className="fixed inset-0 bg-black/50 flex items-start sm:items-center justify-center z-50 p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md my-8 sm:my-0">
             <div className="px-6 py-5 border-b border-gray-200">
               <h2 className="text-lg font-bold text-gray-900">{editingStaff ? "Edit Staff" : "Add Staff Member"}</h2>
             </div>
