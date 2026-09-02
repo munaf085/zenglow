@@ -5,16 +5,31 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import {
-  MapPin, Phone, Globe, Clock, CheckCircle, ChevronRight, Star, Loader2,
+  MapPin,
+  Phone,
+  Globe,
+  Clock,
+  CheckCircle,
+  ChevronRight,
+  Star,
+  Loader2,
+  Instagram,
+  Facebook,
+  Music2,
 } from "lucide-react";
 import { api } from "@/lib/api";
 import type { Business, Service, ServiceCategory } from "@zenglow/types";
 import { formatCurrency, durationLabel } from "@/lib/utils";
 
 const CATEGORY_LABELS: Record<string, string> = {
-  SALON: "Salon", SPA: "Spa", BARBER: "Barbershop",
-  BEAUTY: "Beauty Studio", WELLNESS: "Wellness", NAIL_STUDIO: "Nail Studio",
-  MASSAGE: "Massage", OTHER: "Other",
+  SALON: "Salon",
+  SPA: "Spa",
+  BARBER: "Barbershop",
+  BEAUTY: "Beauty Studio",
+  WELLNESS: "Wellness",
+  NAIL_STUDIO: "Nail Studio",
+  MASSAGE: "Massage",
+  OTHER: "Other",
 };
 
 export default function BusinessDetailPage() {
@@ -28,14 +43,23 @@ export default function BusinessDetailPage() {
 
   useEffect(() => {
     if (!slug) return;
+
     async function load() {
       try {
-        const biz = await api.publicGet<Business>(`/businesses/public/${slug}`);
+        const biz = await api.publicGet<Business>(
+          `/businesses/public/${slug}`
+        );
         setBusiness(biz);
+
         const [svcs, cats] = await Promise.all([
-          api.publicGet<Service[]>(`/businesses/${biz.id}/services?active_only=true`),
-          api.publicGet<ServiceCategory[]>(`/businesses/${biz.id}/services/categories`),
+          api.publicGet<Service[]>(
+            `/businesses/${biz.id}/services?active_only=true`
+          ),
+          api.publicGet<ServiceCategory[]>(
+            `/businesses/${biz.id}/services/categories`
+          ),
         ]);
+
         setServices(svcs);
         setCategories(cats);
       } catch {
@@ -44,6 +68,7 @@ export default function BusinessDetailPage() {
         setIsLoading(false);
       }
     }
+
     load();
   }, [slug, router]);
 
@@ -61,7 +86,9 @@ export default function BusinessDetailPage() {
 
   if (!business) return null;
 
-  const primaryBranch = business.branches?.find((b) => b.is_primary) ?? business.branches?.[0];
+  const primaryBranch =
+    business.branches?.find((b) => b.is_primary) ??
+    business.branches?.[0];
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
@@ -80,24 +107,41 @@ export default function BusinessDetailPage() {
             ✨
           </div>
         )}
+
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
 
         {/* Business identity overlay */}
         <div className="absolute bottom-6 left-6 flex items-end gap-4">
           <div className="w-16 h-16 rounded-xl border-2 border-white bg-white shadow-lg flex items-center justify-center overflow-hidden flex-shrink-0">
             {business.logo_url ? (
-              <Image src={business.logo_url} alt="logo" width={64} height={64} className="object-cover" />
+              <Image
+                src={business.logo_url}
+                alt="logo"
+                width={64}
+                height={64}
+                className="object-cover"
+              />
             ) : (
-              <span className="text-brand-700 font-bold text-2xl">{business.name[0]}</span>
+              <span className="text-brand-700 font-bold text-2xl">
+                {business.name[0]}
+              </span>
             )}
           </div>
+
           <div>
             <div className="flex items-center gap-2 mb-0.5">
-              <h1 className="text-2xl font-bold text-white">{business.name}</h1>
+              <h1 className="text-2xl font-bold text-white">
+                {business.name}
+              </h1>
+
               {business.is_verified && (
-                <CheckCircle className="w-5 h-5 text-brand-300 flex-shrink-0" aria-label="Verified" />
+                <CheckCircle
+                  className="w-5 h-5 text-brand-300 flex-shrink-0"
+                  aria-label="Verified"
+                />
               )}
             </div>
+
             <p className="text-white/80 text-sm">
               {CATEGORY_LABELS[business.category] ?? business.category}
               {primaryBranch?.city ? ` · ${primaryBranch.city}` : ""}
@@ -115,14 +159,22 @@ export default function BusinessDetailPage() {
       <div className="grid lg:grid-cols-3 gap-8">
         {/* Services — main column */}
         <div className="lg:col-span-2">
-          <h2 className="text-xl font-bold text-gray-900 mb-6">Services</h2>
+          <h2 className="text-xl font-bold text-gray-900 mb-6">
+            Services
+          </h2>
 
           {services.length === 0 ? (
-            <p className="text-gray-400 text-sm py-8">No services listed yet.</p>
+            <p className="text-gray-400 text-sm py-8">
+              No services listed yet.
+            </p>
           ) : categories.length > 0 ? (
             categories.map((cat) => {
-              const catServices = services.filter((s) => s.category_id === cat.id);
+              const catServices = services.filter(
+                (s) => s.category_id === cat.id
+              );
+
               if (!catServices.length) return null;
+
               return (
                 <div key={cat.id} className="mb-8">
                   <h3 className="font-semibold text-gray-700 text-sm uppercase tracking-wide mb-3 flex items-center gap-2">
@@ -134,6 +186,7 @@ export default function BusinessDetailPage() {
                     )}
                     {cat.name}
                   </h3>
+
                   <div className="space-y-2">
                     {catServices.map((svc) => (
                       <ServiceRow
@@ -166,19 +219,27 @@ export default function BusinessDetailPage() {
           {/* Info card */}
           <div className="bg-white rounded-xl border border-gray-200 p-5 space-y-4">
             {business.description && (
-              <p className="text-sm text-gray-600 leading-relaxed">{business.description}</p>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                {business.description}
+              </p>
             )}
 
             {primaryBranch?.address_line1 && (
               <div className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+
                 <div className="text-sm text-gray-600">
                   <p>{primaryBranch.address_line1}</p>
+
                   {primaryBranch.city && (
                     <p>
                       {primaryBranch.city}
-                      {primaryBranch.state ? `, ${primaryBranch.state}` : ""}
-                      {primaryBranch.postal_code ? ` ${primaryBranch.postal_code}` : ""}
+                      {primaryBranch.state
+                        ? `, ${primaryBranch.state}`
+                        : ""}
+                      {primaryBranch.postal_code
+                        ? ` ${primaryBranch.postal_code}`
+                        : ""}
                     </p>
                   )}
                 </div>
@@ -188,6 +249,7 @@ export default function BusinessDetailPage() {
             {business.phone && (
               <div className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-gray-400 flex-shrink-0" />
+
                 <a
                   href={`tel:${business.phone}`}
                   className="text-sm text-gray-600 hover:text-brand-600 transition-colors"
@@ -200,6 +262,7 @@ export default function BusinessDetailPage() {
             {business.website && (
               <div className="flex items-center gap-3">
                 <Globe className="w-4 h-4 text-gray-400 flex-shrink-0" />
+
                 <a
                   href={business.website}
                   target="_blank"
@@ -210,31 +273,89 @@ export default function BusinessDetailPage() {
                 </a>
               </div>
             )}
+
+            {(business.instagram_url ||
+              business.facebook_url ||
+              business.tiktok_url) && (
+              <div className="pt-2 border-t border-gray-100">
+                <p className="text-xs font-semibold text-gray-500 mb-3">
+                  Follow us
+                </p>
+
+                <div className="flex items-center gap-2">
+                  {business.instagram_url && (
+                    <a
+                      href={business.instagram_url}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      aria-label="Instagram"
+                      className="w-9 h-9 rounded-lg border border-gray-200 flex items-center justify-center text-gray-500 hover:text-brand-600 hover:border-brand-200 transition-colors"
+                    >
+                      <Instagram className="w-4 h-4" />
+                    </a>
+                  )}
+
+                  {business.facebook_url && (
+                    <a
+                      href={business.facebook_url}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      aria-label="Facebook"
+                      className="w-9 h-9 rounded-lg border border-gray-200 flex items-center justify-center text-gray-500 hover:text-brand-600 hover:border-brand-200 transition-colors"
+                    >
+                      <Facebook className="w-4 h-4" />
+                    </a>
+                  )}
+
+                  {business.tiktok_url && (
+                    <a
+                      href={business.tiktok_url}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      aria-label="TikTok"
+                      className="w-9 h-9 rounded-lg border border-gray-200 flex items-center justify-center text-gray-500 hover:text-brand-600 hover:border-brand-200 transition-colors"
+                    >
+                      <Music2 className="w-4 h-4" />
+                    </a>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Booking info */}
           <div className="bg-brand-50 rounded-xl border border-brand-100 p-4 space-y-2">
             <div className="flex items-center gap-2 mb-1">
               <Clock className="w-4 h-4 text-brand-600" />
-              <span className="text-sm font-semibold text-brand-800">Booking Info</span>
+              <span className="text-sm font-semibold text-brand-800">
+                Booking Info
+              </span>
             </div>
+
             <p className="text-xs text-brand-700">
               Book up to {business.booking_advance_days} days in advance
             </p>
+
             <p className="text-xs text-brand-700">
-              Free cancellation {business.cancellation_hours}h before appointment
+              Free cancellation {business.cancellation_hours}h before
+              appointment
             </p>
-            {business.deposit_required && business.deposit_percentage && (
-              <p className="text-xs text-brand-700">
-                {business.deposit_percentage}% deposit required to confirm
-              </p>
-            )}
+
+            {business.deposit_required &&
+              business.deposit_percentage && (
+                <p className="text-xs text-brand-700">
+                  {business.deposit_percentage}% deposit required to confirm
+                </p>
+              )}
           </div>
 
           {/* Cancellation policy */}
           {business.cancellation_policy && (
             <div className="bg-amber-50 rounded-xl border border-amber-200 p-4">
-              <h4 className="text-sm font-semibold text-amber-800 mb-1">Cancellation Policy</h4>
+              <h4 className="text-sm font-semibold text-amber-800 mb-1">
+                Cancellation Policy
+              </h4>
+
               <p className="text-xs text-amber-700 leading-relaxed">
                 {business.cancellation_policy}
               </p>
@@ -259,19 +380,29 @@ function ServiceRow({
   return (
     <div className="flex items-center justify-between p-4 bg-white rounded-xl border border-gray-200 hover:border-brand-200 hover:bg-brand-50/30 transition-all group">
       <div className="flex-1 min-w-0 mr-4">
-        <p className="font-medium text-gray-900 text-sm">{service.name}</p>
+        <p className="font-medium text-gray-900 text-sm">
+          {service.name}
+        </p>
+
         {service.description && (
-          <p className="text-xs text-gray-400 mt-0.5 line-clamp-1">{service.description}</p>
+          <p className="text-xs text-gray-400 mt-0.5 line-clamp-1">
+            {service.description}
+          </p>
         )}
+
         <div className="flex items-center gap-1.5 mt-1">
           <Clock className="w-3.5 h-3.5 text-gray-400" />
-          <span className="text-xs text-gray-500">{durationLabel(service.duration_minutes)}</span>
+          <span className="text-xs text-gray-500">
+            {durationLabel(service.duration_minutes)}
+          </span>
         </div>
       </div>
+
       <div className="flex items-center gap-3 flex-shrink-0">
         <span className="font-semibold text-gray-900 text-sm whitespace-nowrap">
           {formatCurrency(service.price)}
         </span>
+
         <Link
           href={`/book?business=${businessId}&branch=${branchId ?? ""}&service=${service.id}`}
           className="flex items-center gap-1 bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap"

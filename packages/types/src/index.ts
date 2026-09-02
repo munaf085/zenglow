@@ -56,6 +56,9 @@ export interface Business {
   email?: string;
   phone?: string;
   website?: string;
+  instagram_url?: string;
+  facebook_url?: string;
+  tiktok_url?: string;
   status: BusinessStatus;
   is_verified: boolean;
   is_featured: boolean;
