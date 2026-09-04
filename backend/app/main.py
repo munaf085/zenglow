@@ -143,9 +143,26 @@ async def zenglow_exception_handler(request: Request, exc: ZenglowException):
 
 # ── Routers ───────────────────────────────────────────────────────────────────
 from app.api.v1 import (  # noqa
-    auth, businesses, staff, services,
-    bookings, payments, admin, customers, reviews, users, uploads, verification,
-    inventory, memberships, packages, gift_cards, pos, reports, subscriptions,
+    auth,
+    businesses,
+    staff,
+    services,
+    faqs,
+    bookings,
+    payments,
+    admin,
+    customers,
+    reviews,
+    users,
+    uploads,
+    verification,
+    inventory,
+    memberships,
+    packages,
+    gift_cards,
+    pos,
+    reports,
+    subscriptions,
 )
 
 PREFIX = settings.API_V1_PREFIX
@@ -154,6 +171,8 @@ app.include_router(auth.router, prefix=PREFIX)
 app.include_router(businesses.router, prefix=PREFIX)
 app.include_router(staff.router, prefix=PREFIX)
 app.include_router(services.router, prefix=PREFIX)
+app.include_router(faqs.router, prefix=PREFIX)
+app.include_router(faqs.public_router, prefix=PREFIX)
 app.include_router(bookings.router, prefix=PREFIX)
 app.include_router(payments.router, prefix=PREFIX)
 app.include_router(customers.router, prefix=PREFIX)
