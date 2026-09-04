@@ -8,7 +8,7 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.deps import CurrentUser, assert_business_access
+from app.core.deps import CurrentUser
 from app.db.session import get_db
 from app.schemas.faq import FAQCreate, FAQResponse
 from app.services.faq_service import FAQService
@@ -57,8 +57,10 @@ async def list_faqs(
     current_user: CurrentUser,
     svc: FAQService = Depends(_svc),
 ):
-    assert_business_access(current_user, business_id)
-    return await svc.list_faqs(business_id)
+    return await svc.list_faqs(
+        business_id,
+        current_user,
+    )
 
 
 @router.get(
@@ -71,10 +73,10 @@ async def get_faq(
     current_user: CurrentUser,
     svc: FAQService = Depends(_svc),
 ):
-    assert_business_access(current_user, business_id)
     return await svc.get_faq(
         business_id,
         faq_id,
+        current_user,
     )
 
 

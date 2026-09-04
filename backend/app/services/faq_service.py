@@ -42,7 +42,10 @@ class FAQService:
     async def list_faqs(
         self,
         business_id: UUID,
+        user: User,
     ) -> List[FAQ]:
+        assert_business_access(user, business_id)
+
         result = await self.db.execute(
             select(FAQ)
             .where(FAQ.business_id == business_id)
@@ -55,7 +58,10 @@ class FAQService:
         self,
         business_id: UUID,
         faq_id: UUID,
+        user: User,
     ) -> FAQ:
+        assert_business_access(user, business_id)
+
         result = await self.db.execute(
             select(FAQ).where(
                 FAQ.id == faq_id,

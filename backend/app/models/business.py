@@ -122,9 +122,8 @@ class Business(BaseModel, SoftDeleteMixin):
 
     branches: Mapped[List["Branch"]] = relationship(back_populates="business", lazy="selectin")
     faqs: Mapped[List["FAQ"]] = relationship(
-        "FAQ",
-        back_populates="business",
-        lazy="selectin",
+    "FAQ",
+    back_populates="business",
     )
     subscription_plan: Mapped[Optional["SubscriptionPlan"]] = relationship(  # type: ignore[name-defined]
         back_populates="businesses"
