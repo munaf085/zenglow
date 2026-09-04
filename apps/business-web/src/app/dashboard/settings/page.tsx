@@ -21,6 +21,9 @@ const businessSchema = z.object({
   phone: z.string().optional(),
   email: z.string().email("Invalid email").optional().or(z.literal("")),
   website: z.string().optional(),
+  instagram_url: z.string().url("Must be a valid URL").optional().or(z.literal("")),
+facebook_url: z.string().url("Must be a valid URL").optional().or(z.literal("")),
+tiktok_url: z.string().url("Must be a valid URL").optional().or(z.literal("")),
   booking_advance_days: z.number({ coerce: true }).int().min(1).max(365),
   cancellation_hours: z.number({ coerce: true }).int().min(0),
   cancellation_policy: z.string().optional(),
@@ -53,6 +56,9 @@ export default function SettingsPage() {
       phone: business.phone ?? "",
       email: business.email ?? "",
       website: business.website ?? "",
+      instagram_url: business.instagram_url ?? "",
+      facebook_url: business.facebook_url ?? "",
+      tiktok_url: business.tiktok_url ?? "",
       booking_advance_days: business.booking_advance_days,
       cancellation_hours: business.cancellation_hours,
       cancellation_policy: business.cancellation_policy ?? "",
@@ -220,6 +226,36 @@ export default function SettingsPage() {
               <div className="sm:col-span-2">
                 <label className={labelCls}>Website</label>
                 <input {...register("website")} type="url" className={inputCls} placeholder="https://yourbusiness.com" />
+              </div>
+
+              <div>
+                <label className={labelCls}>Instagram URL</label>
+                <input
+                  {...register("instagram_url")}
+                  type="url"
+                  className={inputCls}
+                  placeholder="https://instagram.com/yourbusiness"
+                />
+              </div>
+
+              <div>
+                <label className={labelCls}>Facebook URL</label>
+                <input
+                  {...register("facebook_url")}
+                  type="url"
+                  className={inputCls}
+                  placeholder="https://facebook.com/yourbusiness"
+                />
+              </div>
+
+              <div>
+                <label className={labelCls}>TikTok URL</label>
+                <input
+                  {...register("tiktok_url")}
+                  type="url"
+                  className={inputCls}
+                  placeholder="https://tiktok.com/@yourbusiness"
+                />
               </div>
             </div>
           </div>

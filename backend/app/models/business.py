@@ -78,6 +78,9 @@ class Business(BaseModel, SoftDeleteMixin):
     email: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
     phone: Mapped[Optional[str]] = mapped_column(String(30), nullable=True)
     website: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
+    instagram_url: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
+    facebook_url: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
+    tiktok_url: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
 
     # Status
     status: Mapped[BusinessStatus] = mapped_column(

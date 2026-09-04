@@ -54,6 +54,9 @@ class BusinessService:
             email=data.email,
             phone=data.phone,
             website=data.website,
+            instagram_url=str(data.instagram_url) if data.instagram_url else None,
+            facebook_url=str(data.facebook_url) if data.facebook_url else None,
+            tiktok_url=str(data.tiktok_url) if data.tiktok_url else None,
             booking_advance_days=data.booking_advance_days,
             cancellation_hours=data.cancellation_hours,
             cancellation_policy=data.cancellation_policy,
@@ -128,7 +131,7 @@ class BusinessService:
         business = await self.repo.get_or_raise(business_id)
         assert_business_access(user, business_id)
 
-        update_data = data.model_dump(exclude_unset=True)
+        update_data = data.model_dump(exclude_unset=True, mode="json")
         for key, value in update_data.items():
             setattr(business, key, value)
 

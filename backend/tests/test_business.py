@@ -11,7 +11,13 @@ class TestBusinessCRUD:
         _, token = customer_user
         res = await client.post(
             "/api/v1/businesses",
-            json={"name": "My Salon", "category": "SALON"},
+            json={
+                "name": "My Salon",
+                "category": "SALON",
+                "instagram_url": "https://instagram.com/mysalon",
+                "facebook_url": "https://facebook.com/mysalon",
+                "tiktok_url": "https://tiktok.com/@mysalon",
+            },
             headers={"Authorization": f"Bearer {token}"},
         )
         assert res.status_code == 201
@@ -20,6 +26,9 @@ class TestBusinessCRUD:
         assert data["slug"] == "my-salon"
         assert data["status"] == "ACTIVE"
         assert len(data["branches"]) == 1  # primary branch auto-created
+        assert data["instagram_url"] == "https://instagram.com/mysalon"
+        assert data["facebook_url"] == "https://facebook.com/mysalon"
+        assert data["tiktok_url"] == "https://tiktok.com/@mysalon"
 
     async def test_create_business_requires_auth(self, client: AsyncClient):
         res = await client.post("/api/v1/businesses", json={"name": "Salon", "category": "SALON"})
@@ -48,11 +57,31 @@ class TestBusinessCRUD:
         business, _, owner, token = business_with_owner
         res = await client.patch(
             f"/api/v1/businesses/{business.id}",
-            json={"description": "Updated description"},
+            json={
+                "description": "Updated description",
+                "instagram_url": "https://instagram.com/glowstudio",
+                "facebook_url": "https://facebook.com/glowstudio",
+                "tiktok_url": "https://tiktok.com/@glowstudio",
+            },
             headers={"Authorization": f"Bearer {token}"},
         )
         assert res.status_code == 200
-        assert res.json()["description"] == "Updated description"
+        data = res.json()
+        assert data["description"] == "Updated description"
+        assert data["instagram_url"] == "https://instagram.com/glowstudio"
+        assert data["facebook_url"] == "https://facebook.com/glowstudio"
+        assert data["tiktok_url"] == "https://tiktok.com/@glowstudio"
+
+    async def test_social_urls_reject_invalid_urls(
+        self, client: AsyncClient, business_with_owner
+    ):
+        business, _, owner, token = business_with_owner
+        res = await client.patch(
+            f"/api/v1/businesses/{business.id}",
+            json={"instagram_url": "javascript:alert(1)"},
+            headers={"Authorization": f"Bearer {token}"},
+        )
+        assert res.status_code == 422
 
     async def test_search_businesses(self, client: AsyncClient, business_with_owner):
         res = await client.get("/api/v1/businesses/search?q=Test")
