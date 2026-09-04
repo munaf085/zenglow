@@ -4,13 +4,16 @@ Business and Branch models — core tenant entities.
 import enum
 import uuid
 from datetime import datetime
-from typing import List, Optional
+from typing import TYPE_CHECKING, List, Optional
 
 from sqlalchemy import Boolean, DateTime, Enum, ForeignKey, Integer, Numeric, String, Text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import BaseModel, SoftDeleteMixin
+
+if TYPE_CHECKING:
+    from app.models.faq import FAQ
 
 
 class BusinessStatus(str, enum.Enum):
@@ -118,6 +121,11 @@ class Business(BaseModel, SoftDeleteMixin):
     )
 
     branches: Mapped[List["Branch"]] = relationship(back_populates="business", lazy="selectin")
+    faqs: Mapped[List["FAQ"]] = relationship(
+        "FAQ",
+        back_populates="business",
+        lazy="selectin",
+    )
     subscription_plan: Mapped[Optional["SubscriptionPlan"]] = relationship(  # type: ignore[name-defined]
         back_populates="businesses"
     )

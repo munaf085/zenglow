@@ -1,6 +1,7 @@
 """
 Import all models here so Alembic can discover them.
 """
+from app.models.faq import FAQ  # noqa: F401
 from app.models.user import User, Role, Permission, UserRole, RolePermission  # noqa: F401
 from app.models.business import Business, Branch  # noqa: F401
 from app.models.staff import Staff, StaffService, WorkingHours, StaffLeave  # noqa: F401
